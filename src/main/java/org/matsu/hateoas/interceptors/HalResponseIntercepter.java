@@ -42,11 +42,10 @@ public class HalResponseIntercepter implements ContainerResponseFilter {
   }
 
   private <T> T getValueFromEntity(Object entity, String valueName) {
-    T value = null;
     try {
       Class<?> clazz = entity.getClass();
       Method method = clazz.getMethod(valueName);
-      value = (T) method.invoke(entity);
+      return (T) method.invoke(entity);
     } catch (NoSuchMethodException | SecurityException |
              IllegalAccessException | IllegalArgumentException |
              InvocationTargetException e) {
@@ -55,8 +54,8 @@ public class HalResponseIntercepter implements ContainerResponseFilter {
           "The annotated HalResponse response object must have a getter method called " +
           valueName + " or in the case of a record, a property called " +
           valueName + ".");
+      return null;
     }
-    return value;
   }
 
   private String getBasePathFromController(Class<?> controller) {
