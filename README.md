@@ -1,5 +1,11 @@
 # An attempt at a Hateoas setup for quarkus
 
+Future todo:
+
+- Create an annotation to mark the "links" property in a class
+- Allow mapping of id's in paths
+- Safer operations
+
 Current progress:
 
 ```

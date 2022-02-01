@@ -46,7 +46,7 @@ public class HalResponseIntercepter implements ContainerResponseFilter {
     try {
       Class<?> clazz = entity.getClass();
       Method method = clazz.getMethod(valueName);
-      value = (T)method.invoke(entity);
+      value = (T) method.invoke(entity);
     } catch (NoSuchMethodException | SecurityException |
              IllegalAccessException | IllegalArgumentException |
              InvocationTargetException e) {
