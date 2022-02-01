@@ -34,13 +34,14 @@ public class HalResponseIntercepter implements ContainerResponseFilter {
     Method[] methods = controller.getMethods();
     //
 
-    if (entity instanceof List entityList) {
+    if (entity instanceof List<?> entityList) {
       entityList.forEach(ent -> applyLinksToEntity(methods, basePath, ent));
     } else {
       applyLinksToEntity(methods, basePath, entity);
     }
   }
 
+  @SuppressWarnings("unchecked")
   private <T> T getValueFromEntity(Object entity, String valueName) {
     try {
       Class<?> clazz = entity.getClass();
@@ -88,10 +89,6 @@ public class HalResponseIntercepter implements ContainerResponseFilter {
 
   private HalResponse getHalResponseAnnotation(Class<?> clazz) {
     return clazz.<HalResponse>getAnnotation(HalResponse.class);
-  }
-
-  private boolean entityIsList(Object entity) {
-    return entity instanceof List<?>;
   }
 
   private Class<?> getClassFromEntity(Object entity) {
