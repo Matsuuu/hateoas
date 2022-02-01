@@ -1,9 +1,9 @@
 package org.matsu.hateoas.response;
 
-import java.util.List;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-import org.matsu.hateoas.links.HalLink;
-
-public interface HalResponse {
-    public static List<HalLink> generateLinks();
+@Retention(RetentionPolicy.RUNTIME)
+public @interface HalResponse {
+    Class<?> value();
 }
