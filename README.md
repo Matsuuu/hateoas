@@ -8,6 +8,11 @@ Future todo:
 - Allow naming relations via annotations
 - Consider mapping links as a HashMap instead of an list
 
+## Material
+
+- https://restfulapi.net/hateoas/
+- https://tools.ietf.org/id/draft-kelly-json-hal-01.html
+
 Current progress:
 
 ```
