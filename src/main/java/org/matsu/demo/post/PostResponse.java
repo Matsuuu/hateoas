@@ -5,11 +5,16 @@ import java.util.List;
 
 import org.matsu.demo.comment.Comment;
 import org.matsu.hateoas.links.HalLink;
-import org.matsu.hateoas.response.HalResponse;
+import org.matsu.hateoas.core.HalResponse;
 
 @HalResponse(PostController.class)
-public record PostResponse(long id, String title, String content,
-                           List<Comment> comments, List<HalLink> links) {
+public record PostResponse(
+        long id, 
+        String title, 
+        String content,
+        List<Comment> comments, 
+        List<HalLink> links
+) {
 
   public static PostResponse from(long id, String title, String content,
                                   List<Comment> comments) {

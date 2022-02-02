@@ -1,4 +1,4 @@
-package org.matsu.hateoas.response;
+package org.matsu.hateoas.core;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
