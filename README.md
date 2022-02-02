@@ -13,6 +13,13 @@ Future todo:
 - https://restfulapi.net/hateoas/
 - https://tools.ietf.org/id/draft-kelly-json-hal-01.html
 
+## Main goals
+
+- Create an easily usable API to create HATEOAS HAL geneeration on JAX-RS controllers
+- Allow usage in classes and records
+- Integrate well with Quarkus setups
+- Allow customization of object and route object names
+
 Current progress:
 
 ```
