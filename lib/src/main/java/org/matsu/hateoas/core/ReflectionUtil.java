@@ -9,8 +9,6 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import org.matsu.hateoas.http.HttpMethods;
-import org.matsu.hateoas.links.HalLink;
-import org.matsu.hateoas.links.HalLinks;
 
 public class ReflectionUtil {
 
@@ -22,15 +20,10 @@ public class ReflectionUtil {
 
   public static List<HalLink> getLinksList(Object entity) {
     Class<?> clazz = entity.getClass();
-    for (Field f : clazz.getDeclaredFields()) {
-      System.out.println("Field " + f.getName());
-    }
     try {
       return Stream.of(clazz.getDeclaredFields())
           .filter(f -> f.isAnnotationPresent(HalLinks.class))
-          .map(f
-               -> ReflectionUtil.<List<HalLink>>getFieldFromClass(entity, clazz,
-                                                                  f))
+          .map(f -> ReflectionUtil.<List<HalLink>>getFieldFromClass(entity, clazz,f))
           .filter(Objects::nonNull)
           .findFirst()
           .orElseThrow();
@@ -38,9 +31,7 @@ public class ReflectionUtil {
     } catch (Exception ex) {
       System.out.println("Error in class " + clazz);
       ex.printStackTrace();
-      System.err.println(
-          "Class marked as HalResponse, but no @HalLinks annotation is present on a field of class " +
-          clazz.getName());
+      System.err.println("Class marked as HalResponse, but no @HalLinks annotation is present on a field of class " + clazz.getName());
       return new ArrayList<>();
     }
   }

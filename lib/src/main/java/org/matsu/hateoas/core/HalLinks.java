@@ -1,4 +1,4 @@
-package org.matsu.hateoas.links;
+package org.matsu.hateoas.core;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
