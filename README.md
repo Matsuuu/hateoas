@@ -2,9 +2,6 @@
 
 Future todo:
 
-- Create an annotation to mark the "links" property in a class
-- Allow mapping of id's in paths
-- Safer operations
 - Allow naming relations via annotations
 - Consider mapping links as a HashMap instead of an list
 

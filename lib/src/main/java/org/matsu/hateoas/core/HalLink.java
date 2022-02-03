@@ -21,7 +21,7 @@ public class HalLink {
     return link;
   }
 
-  public static HalLink from(Method method, String basePath, long id) {
+  public static HalLink from(Method method, String basePath, Object id) {
     String rel = method.getName();
     String href = getHrefFromPathAnnotation(method, basePath, id);
     String type = getTypeFromMethodAnnotation(method);
@@ -29,13 +29,12 @@ public class HalLink {
     return HalLink.from(href, rel, type);
   }
 
-  private static String getHrefFromPathAnnotation(Method method,
-                                                  String basePath, long id) {
+  private static String getHrefFromPathAnnotation(Method method, String basePath, Object id) {
     String methodPath =
         Optional.ofNullable(method.<Path>getAnnotation(Path.class))
             .map(ann -> ann.value())
             .orElse("");
-    return basePath + getSlashIfNeeded(basePath, methodPath) + methodPath.replaceAll("\\{\\w+\\}", Long.toString(id));
+    return basePath + getSlashIfNeeded(basePath, methodPath) + methodPath.replaceAll("\\{\\w+\\}", id.toString());
   }
 
   private static String getSlashIfNeeded(String basePath, String methodPath) {
@@ -50,8 +49,7 @@ public class HalLink {
     return Stream.of(annotations)
         .filter(HttpMethods::annotationIsHttpMethodAnnotation)
         .findFirst()
-        .map(
-            ann -> ann.annotationType().getAnnotation(HttpMethod.class).value())
+        .map(ann -> ann.annotationType().getAnnotation(HttpMethod.class).value())
         .orElse("");
   }
 

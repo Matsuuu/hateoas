@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.matsu.demo.comment.Comment;
+import org.matsu.hateoas.core.HalId;
 import org.matsu.hateoas.core.HalLink;
 import org.matsu.hateoas.core.HalLinks;
 import org.matsu.hateoas.core.HalResponse;
 
 @HalResponse(PostController.class)
 public record PostResponse(
-        long id, 
+        @HalId long id, 
         String title, 
         String content,
         List<Comment> comments, 

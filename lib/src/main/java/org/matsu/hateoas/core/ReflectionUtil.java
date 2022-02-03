@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.matsu.hateoas.http.HttpMethods;
@@ -23,31 +24,38 @@ public class ReflectionUtil {
     try {
       return Stream.of(clazz.getDeclaredFields())
           .filter(f -> f.isAnnotationPresent(HalLinks.class))
-          .map(f -> ReflectionUtil.<List<HalLink>>getFieldFromClass(entity, clazz,f))
+          .map(f -> ReflectionUtil.<List<HalLink>>getFieldFromClass(entity, clazz, f))
           .filter(Objects::nonNull)
           .findFirst()
           .orElseThrow();
 
     } catch (Exception ex) {
-      System.out.println("Error in class " + clazz);
       ex.printStackTrace();
       System.err.println("Class marked as HalResponse, but no @HalLinks annotation is present on a field of class " + clazz.getName());
       return new ArrayList<>();
     }
   }
 
+  public static Object getEntityId(Object entity) {
+    Class<?> clazz = entity.getClass();
+    return Stream.of(clazz.getDeclaredFields())
+        .filter(f -> f.isAnnotationPresent(HalId.class))
+        .map(f -> getFieldFromClass(entity, clazz, f))
+        .filter(Objects::nonNull)
+        .findFirst()
+        .orElse("<NO_ID>");
+  }
+
   @SuppressWarnings("unchecked")
   public static <T> T getFieldFromClass(Object entity, Class<?> clazz,
                                         Field field) {
-    System.out.println("Checking field " + field.getName());
     try {
       // Try to directly access the field
       return (T)field.get(entity);
     } catch (IllegalAccessException illegalAccessException) {
       try {
         // Try to get the value via a getter function
-        Method getterMethod =
-            clazz.getMethod("get" + capitalize(field.getName()));
+        Method getterMethod = clazz.getMethod("get" + capitalize(field.getName()));
         return (T)getterMethod.invoke(entity);
       } catch (Exception methodException) {
         try {

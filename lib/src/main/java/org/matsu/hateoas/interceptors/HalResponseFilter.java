@@ -3,7 +3,6 @@ package org.matsu.hateoas.interceptors;
 import static org.matsu.hateoas.core.ReflectionUtil.getClassFromEntity;
 import static org.matsu.hateoas.core.ReflectionUtil.getHalResponseAnnotation;
 import static org.matsu.hateoas.core.ReflectionUtil.getLinksList;
-import static org.matsu.hateoas.core.ReflectionUtil.getValueFromEntity;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -55,13 +54,13 @@ public class HalResponseFilter implements ContainerResponseFilter {
   private void applyLinksToEntity(Method[] methods, String basePath,
                                   Object entity) {
 
-    Long id = getValueFromEntity(entity, "id");
+    Object id = ReflectionUtil.getEntityId(entity);
     List<HalLink> links = getLinks(methods, basePath, id);
     List<HalLink> entityLinks = getLinksList(entity);
     entityLinks.addAll(links);
   }
 
-  private List<HalLink> getLinks(Method[] methods, String basePath, long id) {
+  private List<HalLink> getLinks(Method[] methods, String basePath, Object id) {
     return Stream.of(methods)
         .filter(ReflectionUtil::methodIsAnEndpoint)
         .map(method -> HalLink.from(method, basePath, id))
