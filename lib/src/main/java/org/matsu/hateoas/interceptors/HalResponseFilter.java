@@ -12,7 +12,7 @@ import javax.ws.rs.container.ContainerResponseFilter;
 import javax.ws.rs.ext.Provider;
 import org.matsu.hateoas.http.HttpMethods;
 import org.matsu.hateoas.links.HalLink;
-import org.matsu.hateoas.response.HalResponse;
+import org.matsu.hateoas.core.HalResponse;
 
 @Provider
 public class HalResponseFilter implements ContainerResponseFilter {
