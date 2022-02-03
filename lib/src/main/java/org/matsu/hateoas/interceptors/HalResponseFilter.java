@@ -15,7 +15,7 @@ import org.matsu.hateoas.links.HalLink;
 import org.matsu.hateoas.response.HalResponse;
 
 @Provider
-public class HalResponseIntercepter implements ContainerResponseFilter {
+public class HalResponseFilter implements ContainerResponseFilter {
 
   @Override
   public void filter(ContainerRequestContext requestContext,

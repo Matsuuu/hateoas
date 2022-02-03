@@ -1,0 +1,3 @@
+#!/bin/bash
+
+./mvnw clean compile quarkus:dev -DdebugHost=0.0.0.0
