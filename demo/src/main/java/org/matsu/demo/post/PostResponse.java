@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.matsu.demo.comment.Comment;
-import org.matsu.hateoas.links.HalLink;
 import org.matsu.hateoas.core.HalResponse;
+import org.matsu.hateoas.links.HalLink;
+import org.matsu.hateoas.links.HalLinks;
 
 @HalResponse(PostController.class)
 public record PostResponse(
@@ -13,7 +14,7 @@ public record PostResponse(
         String title, 
         String content,
         List<Comment> comments, 
-        List<HalLink> links
+        @HalLinks List<HalLink> links
 ) {
 
   public static PostResponse from(long id, String title, String content,

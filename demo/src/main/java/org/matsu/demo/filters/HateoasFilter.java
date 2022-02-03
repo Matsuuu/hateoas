@@ -6,5 +6,4 @@ import org.matsu.hateoas.interceptors.HalResponseFilter;
 
 @Provider
 public class HateoasFilter extends HalResponseFilter {
-
 }

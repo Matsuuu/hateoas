@@ -1,18 +1,24 @@
 package org.matsu.hateoas.interceptors;
 
+import static org.matsu.hateoas.core.ReflectionUtil.getClassFromEntity;
+import static org.matsu.hateoas.core.ReflectionUtil.getHalResponseAnnotation;
+import static org.matsu.hateoas.core.ReflectionUtil.getLinksList;
+import static org.matsu.hateoas.core.ReflectionUtil.getValueFromEntity;
+
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.stream.Stream;
+
 import javax.ws.rs.Path;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.container.ContainerResponseFilter;
 import javax.ws.rs.ext.Provider;
-import org.matsu.hateoas.http.HttpMethods;
-import org.matsu.hateoas.links.HalLink;
+
 import org.matsu.hateoas.core.HalResponse;
+import org.matsu.hateoas.core.ReflectionUtil;
+import org.matsu.hateoas.links.HalLink;
 
 @Provider
 public class HalResponseFilter implements ContainerResponseFilter {
@@ -41,24 +47,6 @@ public class HalResponseFilter implements ContainerResponseFilter {
     }
   }
 
-  @SuppressWarnings("unchecked")
-  private <T> T getValueFromEntity(Object entity, String valueName) {
-    try {
-      Class<?> clazz = entity.getClass();
-      Method method = clazz.getMethod(valueName);
-      return (T) method.invoke(entity);
-    } catch (NoSuchMethodException | SecurityException |
-             IllegalAccessException | IllegalArgumentException |
-             InvocationTargetException e) {
-      e.printStackTrace();
-      System.err.println(
-          "The annotated HalResponse response object must have a getter method called " +
-          valueName + " or in the case of a record, a property called " +
-          valueName + ".");
-      return null;
-    }
-  }
-
   private String getBasePathFromController(Class<?> controller) {
     Path pathAnnotation = controller.getAnnotation(Path.class);
     return pathAnnotation != null ? pathAnnotation.value() : "";
@@ -69,38 +57,19 @@ public class HalResponseFilter implements ContainerResponseFilter {
 
     Long id = getValueFromEntity(entity, "id");
     List<HalLink> links = getLinks(methods, basePath, id);
-    List<HalLink> entityLinks = getValueFromEntity(entity, "links");
+    List<HalLink> entityLinks = getLinksList(entity);
     entityLinks.addAll(links);
   }
 
   private List<HalLink> getLinks(Method[] methods, String basePath, long id) {
     return Stream.of(methods)
-        .filter(this::methodIsAnEndpoint)
+        .filter(ReflectionUtil::methodIsAnEndpoint)
         .map(method -> HalLink.from(method, basePath, id))
         .toList();
   }
 
-  private boolean methodIsAnEndpoint(Method method) {
-    return Stream.of(method.getAnnotations())
-        .filter(HttpMethods::annotationIsHttpMethodAnnotation)
-        .findFirst()
-        .isPresent();
-  }
-
-  private HalResponse getHalResponseAnnotation(Class<?> clazz) {
-    return clazz.<HalResponse>getAnnotation(HalResponse.class);
-  }
-
-  private Class<?> getClassFromEntity(Object entity) {
-    if (entity instanceof List<?> list) {
-      if (list.isEmpty())
-        return null;
-      return list.get(0).getClass();
-    }
-    return entity.getClass();
-  }
-
-  private boolean hasHalResponseAnnotation(ContainerResponseContext responseContext) {
+  private boolean
+  hasHalResponseAnnotation(ContainerResponseContext responseContext) {
     Class<?> classFromEntity = getClassFromEntity(responseContext.getEntity());
     if (classFromEntity == null)
       return false;
