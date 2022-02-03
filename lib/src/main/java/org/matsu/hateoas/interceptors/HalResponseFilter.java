@@ -16,9 +16,9 @@ import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.container.ContainerResponseFilter;
 import javax.ws.rs.ext.Provider;
 
+import org.matsu.hateoas.core.HalLink;
 import org.matsu.hateoas.core.HalResponse;
 import org.matsu.hateoas.core.ReflectionUtil;
-import org.matsu.hateoas.links.HalLink;
 
 @Provider
 public class HalResponseFilter implements ContainerResponseFilter {

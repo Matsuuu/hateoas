@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.matsu.demo.comment.Comment;
+import org.matsu.hateoas.core.HalLink;
+import org.matsu.hateoas.core.HalLinks;
 import org.matsu.hateoas.core.HalResponse;
-import org.matsu.hateoas.links.HalLink;
-import org.matsu.hateoas.links.HalLinks;
 
 @HalResponse(PostController.class)
 public record PostResponse(
