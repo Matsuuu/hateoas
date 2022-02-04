@@ -7,6 +7,9 @@ import static org.matsu.hateoas.core.ReflectionUtil.getLinksList;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.ws.rs.Path;
@@ -57,7 +60,13 @@ public class HalResponseFilter implements ContainerResponseFilter {
     Object id = ReflectionUtil.getEntityId(entity);
     List<HalLink> links = getLinks(methods, basePath, id);
     List<HalLink> entityLinks = getLinksList(entity);
+    // TODO: Change getLinksList to getLinksMap and do the map mapping
+    Map<String, HalLink> entityLinksAsMap = linkListToMap(entityLinks);
     entityLinks.addAll(links);
+  }
+
+  private Map<String, HalLink> linkListToMap(List<HalLink> entityLinks) {
+    return entityLinks.stream().collect(Collectors.toMap(HalLink::getRel, Function.identity()));
   }
 
   private List<HalLink> getLinks(Method[] methods, String basePath, Object id) {

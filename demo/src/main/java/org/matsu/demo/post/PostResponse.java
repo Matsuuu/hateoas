@@ -1,7 +1,8 @@
 package org.matsu.demo.post;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.matsu.demo.comment.Comment;
 import org.matsu.hateoas.core.HalId;
@@ -15,13 +16,13 @@ public record PostResponse(
         String title, 
         String content,
         List<Comment> comments, 
-        @HalLinks List<HalLink> links
+        @HalLinks Map<String, HalLink> links
 ) {
 
   public static PostResponse from(long id, String title, String content,
                                   List<Comment> comments) {
     return new PostResponse(id, title, content, comments,
-                            new ArrayList<>());
+                            new HashMap<>());
   }
 
   public static PostResponse from(Post post) {
