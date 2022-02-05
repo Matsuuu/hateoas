@@ -24,7 +24,7 @@ public class HalResponseFilter implements ContainerResponseFilter {
                      ContainerResponseContext responseContext)
       throws IOException {
 
-    if (!hasHalResponseAnnotation(responseContext)) {
+    if (!ReflectionUtil.hasHalResponseAnnotation(responseContext)) {
       return;
     }
 
@@ -32,20 +32,14 @@ public class HalResponseFilter implements ContainerResponseFilter {
     Class<?> clazz = ReflectionUtil.getClassFromEntity(entity);
     HalResponse annotation = ReflectionUtil.getHalResponseAnnotation(clazz);
     Class<?> controller = annotation.value();
-    String basePath = getBasePathFromController(controller);
+    String basePath = ReflectionUtil.getBasePathFromController(controller);
     Method[] methods = controller.getMethods();
-    //
 
     if (entity instanceof List<?> entityList) {
       entityList.forEach(ent -> applyLinksToEntity(methods, basePath, ent));
     } else {
       applyLinksToEntity(methods, basePath, entity);
     }
-  }
-
-  private String getBasePathFromController(Class<?> controller) {
-    Path pathAnnotation = controller.getAnnotation(Path.class);
-    return pathAnnotation != null ? pathAnnotation.value() : "";
   }
 
   private void applyLinksToEntity(Method[] methods, String basePath,
@@ -63,13 +57,5 @@ public class HalResponseFilter implements ContainerResponseFilter {
         .filter(ReflectionUtil::methodIsAnEndpoint)
         .map(method -> HalLink.from(method, basePath, id))
         .toList();
-  }
-
-  private boolean
-  hasHalResponseAnnotation(ContainerResponseContext responseContext) {
-    Class<?> classFromEntity = ReflectionUtil.getClassFromEntity(responseContext.getEntity());
-    if (classFromEntity == null)
-      return false;
-    return classFromEntity.isAnnotationPresent(HalResponse.class);
   }
 }

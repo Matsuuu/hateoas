@@ -11,6 +11,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.ws.rs.Path;
+import javax.ws.rs.container.ContainerResponseContext;
+
 import org.matsu.hateoas.http.HttpMethods;
 
 public class ReflectionUtil {
@@ -19,6 +22,18 @@ public class ReflectionUtil {
 
   public static HalResponse getHalResponseAnnotation(Class<?> clazz) {
     return clazz.<HalResponse>getAnnotation(HalResponse.class);
+  }
+
+  public static String getBasePathFromController(Class<?> controller) {
+    Path pathAnnotation = controller.getAnnotation(Path.class);
+    return pathAnnotation != null ? pathAnnotation.value() : "";
+  }
+
+  public static boolean hasHalResponseAnnotation(ContainerResponseContext responseContext) {
+    Class<?> classFromEntity = getClassFromEntity(responseContext.getEntity());
+    if (classFromEntity == null)
+      return false;
+    return classFromEntity.isAnnotationPresent(HalResponse.class);
   }
 
   public static Map<String, HalLink> getLinksMap(Object entity) {

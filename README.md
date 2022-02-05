@@ -20,7 +20,7 @@ Future todo:
 
 Current progress:
 
-```
+```http
 GET http://localhost:8080/posts
 
 HTTP/1.1 200 OK
