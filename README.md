@@ -3,9 +3,7 @@
 Future todo:
 
 - Allow naming relations via annotations
-- Consider mapping links as a HashMap instead of an list
 - Recursively append links to @HalResponse's
-- Rename interceptors to Filters
 - Automatically add `_self`
 
 ## Material
