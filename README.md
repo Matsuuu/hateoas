@@ -2,7 +2,6 @@
 
 Future todo:
 
-- Allow naming relations via annotations
 - Recursively append links to @HalResponse's
 - Automatically add `_self`
 

@@ -9,10 +9,13 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
+import org.matsu.hateoas.core.HalRelation;
+
 @Path("posts")
 public class PostController {
 
   @GET
+  @HalRelation("list_posts")
   public List<PostResponse> getAll() {
     return Post.getAll();
   }

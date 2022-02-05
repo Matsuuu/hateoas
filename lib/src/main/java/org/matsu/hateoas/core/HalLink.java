@@ -22,11 +22,19 @@ public class HalLink {
   }
 
   public static HalLink from(Method method, String basePath, Object id) {
-    String rel = method.getName();
+    String rel = getLinkRelation(method);
     String href = getHrefFromPathAnnotation(method, basePath, id);
     String type = getTypeFromMethodAnnotation(method);
 
     return HalLink.from(href, rel, type);
+  }
+
+  private static String getLinkRelation(Method method) {
+      boolean hasRelationAnnotation = method.isAnnotationPresent(HalRelation.class);
+      if (!hasRelationAnnotation) { 
+          return method.getName();
+      }
+      return method.<HalRelation>getAnnotation(HalRelation.class).value();
   }
 
   private static String getHrefFromPathAnnotation(Method method, String basePath, Object id) {
