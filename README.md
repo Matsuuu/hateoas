@@ -24,7 +24,7 @@ GET http://localhost:8080/posts
 
 HTTP/1.1 200 OK
 Content-Type: application/json
-content-length: 1135
+content-length: 1279
 
 [
   {
@@ -38,33 +38,33 @@ content-length: 1135
         "sender": 1
       }
     ],
-    "links": [
-      {
+    "links": {
+      "add": {
         "href": "posts",
         "rel": "add",
         "type": "POST"
       },
-      {
+      "list_posts": {
+        "href": "posts",
+        "rel": "list_posts",
+        "type": "GET"
+      },
+      "update": {
         "href": "posts",
         "rel": "update",
         "type": "PATCH"
       },
-      {
-        "href": "posts/1",
-        "rel": "delete",
-        "type": "DELETE"
-      },
-      {
-        "href": "posts",
-        "rel": "getAll",
-        "type": "GET"
-      },
-      {
+      "byId": {
         "href": "posts/1",
         "rel": "byId",
         "type": "GET"
+      },
+      "delete": {
+        "href": "posts/1",
+        "rel": "delete",
+        "type": "DELETE"
       }
-    ]
+    }
   },
   {
     "id": 2,
@@ -87,33 +87,33 @@ content-length: 1135
         "sender": 6
       }
     ],
-    "links": [
-      {
+    "links": {
+      "add": {
         "href": "posts",
         "rel": "add",
         "type": "POST"
       },
-      {
+      "list_posts": {
+        "href": "posts",
+        "rel": "list_posts",
+        "type": "GET"
+      },
+      "update": {
         "href": "posts",
         "rel": "update",
         "type": "PATCH"
       },
-      {
-        "href": "posts/2",
-        "rel": "delete",
-        "type": "DELETE"
-      },
-      {
-        "href": "posts",
-        "rel": "getAll",
-        "type": "GET"
-      },
-      {
+      "byId": {
         "href": "posts/2",
         "rel": "byId",
         "type": "GET"
+      },
+      "delete": {
+        "href": "posts/2",
+        "rel": "delete",
+        "type": "DELETE"
       }
-    ]
+    }
   },
   {
     "id": 3,
@@ -126,33 +126,34 @@ content-length: 1135
         "sender": 1
       }
     ],
-    "links": [
-      {
+    "links": {
+      "add": {
         "href": "posts",
         "rel": "add",
         "type": "POST"
       },
-      {
+      "list_posts": {
+        "href": "posts",
+        "rel": "list_posts",
+        "type": "GET"
+      },
+      "update": {
         "href": "posts",
         "rel": "update",
         "type": "PATCH"
       },
-      {
-        "href": "posts/3",
-        "rel": "delete",
-        "type": "DELETE"
-      },
-      {
-        "href": "posts",
-        "rel": "getAll",
-        "type": "GET"
-      },
-      {
+      "byId": {
         "href": "posts/3",
         "rel": "byId",
         "type": "GET"
+      },
+      "delete": {
+        "href": "posts/3",
+        "rel": "delete",
+        "type": "DELETE"
       }
-    ]
+    }
   }
 ]
+
 ```
