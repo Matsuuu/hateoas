@@ -3,10 +3,12 @@ package org.matsu.hateoas.core;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.matsu.hateoas.http.HttpMethods;
@@ -19,12 +21,12 @@ public class ReflectionUtil {
     return clazz.<HalResponse>getAnnotation(HalResponse.class);
   }
 
-  public static List<HalLink> getLinksList(Object entity) {
+  public static Map<String, HalLink> getLinksMap(Object entity) {
     Class<?> clazz = entity.getClass();
     try {
       return Stream.of(clazz.getDeclaredFields())
           .filter(f -> f.isAnnotationPresent(HalLinks.class))
-          .map(f -> ReflectionUtil.<List<HalLink>>getFieldFromClass(entity, clazz, f))
+          .map(f -> ReflectionUtil.<Map<String, HalLink>>getFieldFromClass(entity, clazz, f))
           .filter(Objects::nonNull)
           .findFirst()
           .orElseThrow();
@@ -32,8 +34,13 @@ public class ReflectionUtil {
     } catch (Exception ex) {
       ex.printStackTrace();
       System.err.println("Class marked as HalResponse, but no @HalLinks annotation is present on a field of class " + clazz.getName());
-      return new ArrayList<>();
+      System.err.println("Make sure that you have a field of type Map<String, HalLink> annotated with the @HalLinks annotation.");
+      return new HashMap<>();
     }
+  }
+
+  public static Map<String, HalLink> linksListToMap(List<HalLink> linksList) { 
+    return linksList.stream().collect(Collectors.toMap(HalLink::getRel, Function.identity()));
   }
 
   public static Object getEntityId(Object entity) {

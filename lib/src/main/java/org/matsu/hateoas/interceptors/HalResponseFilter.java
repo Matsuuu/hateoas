@@ -1,9 +1,5 @@
 package org.matsu.hateoas.interceptors;
 
-import static org.matsu.hateoas.core.ReflectionUtil.getClassFromEntity;
-import static org.matsu.hateoas.core.ReflectionUtil.getHalResponseAnnotation;
-import static org.matsu.hateoas.core.ReflectionUtil.getLinksList;
-
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -35,8 +31,8 @@ public class HalResponseFilter implements ContainerResponseFilter {
     }
 
     Object entity = responseContext.getEntity();
-    Class<?> clazz = getClassFromEntity(entity);
-    HalResponse annotation = getHalResponseAnnotation(clazz);
+    Class<?> clazz = ReflectionUtil.getClassFromEntity(entity);
+    HalResponse annotation = ReflectionUtil.getHalResponseAnnotation(clazz);
     Class<?> controller = annotation.value();
     String basePath = getBasePathFromController(controller);
     Method[] methods = controller.getMethods();
@@ -59,14 +55,9 @@ public class HalResponseFilter implements ContainerResponseFilter {
 
     Object id = ReflectionUtil.getEntityId(entity);
     List<HalLink> links = getLinks(methods, basePath, id);
-    List<HalLink> entityLinks = getLinksList(entity);
-    // TODO: Change getLinksList to getLinksMap and do the map mapping
-    Map<String, HalLink> entityLinksAsMap = linkListToMap(entityLinks);
-    entityLinks.addAll(links);
-  }
-
-  private Map<String, HalLink> linkListToMap(List<HalLink> entityLinks) {
-    return entityLinks.stream().collect(Collectors.toMap(HalLink::getRel, Function.identity()));
+    Map<String, HalLink> entityLinks = ReflectionUtil.getLinksMap(entity);
+    Map<String, HalLink> entityLinksAsMap = ReflectionUtil.linksListToMap(links);
+    entityLinks.putAll(entityLinksAsMap);
   }
 
   private List<HalLink> getLinks(Method[] methods, String basePath, Object id) {
@@ -78,7 +69,7 @@ public class HalResponseFilter implements ContainerResponseFilter {
 
   private boolean
   hasHalResponseAnnotation(ContainerResponseContext responseContext) {
-    Class<?> classFromEntity = getClassFromEntity(responseContext.getEntity());
+    Class<?> classFromEntity = ReflectionUtil.getClassFromEntity(responseContext.getEntity());
     if (classFromEntity == null)
       return false;
     return classFromEntity.isAnnotationPresent(HalResponse.class);
