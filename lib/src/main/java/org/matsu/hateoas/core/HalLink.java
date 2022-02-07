@@ -42,7 +42,7 @@ public class HalLink {
         Optional.ofNullable(method.<Path>getAnnotation(Path.class))
             .map(ann -> ann.value())
             .orElse("");
-    return basePath + getSlashIfNeeded(basePath, methodPath) + methodPath.replaceAll("\\{\\w+\\}", id.toString());
+    return basePath + getSlashIfNeeded(basePath, methodPath) + ReflectionUtil.addIdToPath(methodPath, id);
   }
 
   private static String getSlashIfNeeded(String basePath, String methodPath) {

@@ -18,15 +18,18 @@ import org.matsu.hateoas.http.HttpMethods;
 
 public class ReflectionUtil {
 
+    private static final String NO_ID = "<NO_ID>";
+
   public static void getAnnotation() {}
 
   public static HalResponse getHalResponseAnnotation(Class<?> clazz) {
-    return clazz.<HalResponse>getAnnotation(HalResponse.class);
+    return clazz.getAnnotation(HalResponse.class);
   }
 
   public static String getBasePathFromController(Class<?> controller) {
     Path pathAnnotation = controller.getAnnotation(Path.class);
-    return pathAnnotation != null ? pathAnnotation.value() : "";
+    String path = pathAnnotation != null ? pathAnnotation.value() : "";
+    return path.substring(0,1) == "/" ? path : "/" + path;
   }
 
   public static boolean hasHalResponseAnnotation(ContainerResponseContext responseContext) {
@@ -34,6 +37,19 @@ public class ReflectionUtil {
     if (classFromEntity == null)
       return false;
     return classFromEntity.isAnnotationPresent(HalResponse.class);
+  }
+
+  public static String getSelfPath(Class<?> clazz, Object entity) {
+    HalSelf selfAnno = clazz.getAnnotation(HalSelf.class);
+    if (selfAnno == null) return "";
+    String selfAnnotationPath = selfAnno.value();
+    Object id = getEntityId(entity);
+    return addIdToPath(selfAnnotationPath, id);
+  }
+
+  public static String addIdToPath(String path, Object id) {
+  // TODO: Make this mapping not overwrite everything
+    return path.replaceAll("\\{\\w+\\}", id.toString());
   }
 
   public static Map<String, HalLink> getLinksMap(Object entity) {
@@ -65,7 +81,11 @@ public class ReflectionUtil {
         .map(f -> getFieldFromClass(entity, clazz, f))
         .filter(Objects::nonNull)
         .findFirst()
-        .orElse("<NO_ID>");
+        .orElse(NO_ID);
+  }
+
+  public static boolean isEntityId(Object id) {
+      return !id.equals(NO_ID);
   }
 
   @SuppressWarnings("unchecked")

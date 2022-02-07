@@ -9,7 +9,9 @@ import org.matsu.hateoas.core.HalId;
 import org.matsu.hateoas.core.HalLink;
 import org.matsu.hateoas.core.HalLinks;
 import org.matsu.hateoas.core.HalResponse;
+import org.matsu.hateoas.core.HalSelf;
 
+@HalSelf("/posts/{postId}")
 @HalResponse(PostController.class)
 public record PostResponse(
         @HalId long id, 

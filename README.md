@@ -4,6 +4,9 @@ Future todo:
 
 - Recursively append links to @HalResponse's
 - Automatically add `_self`
+- Allow tagging entityId in routes
+    - Could be done via naming it in the `@HalId("postId")`
+    - Or in the pathparam `@PathParam("postId") @HalId int postId `
 
 ## Material
 
